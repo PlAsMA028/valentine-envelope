@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Mae ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  background:radial-gradient(circle,#ffe5f0,#ffd1e7);
+  font-family:'Poppins',sans-serif;
+  overflow:hidden;
+  perspective:1200px;
+  padding-top:140px;
+  position: relative; /* allow background emojis */
+}
+
+/* Add 🎀 into background only */
+body::before{
+  content:'🎀🎀🎀🎀🎀🎀🎀🎀🎀🎀🎀🎀';
+  font-size:30px;
+  position:absolute;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-wrap:wrap;
+  align-content:space-between;
+  justify-content:space-around;
+  z-index:0; /* behind everything */
+  pointer-events:none; /* don’t block clicks */
+  opacity:0.2;
+}
+
+/* HEART RAIN */
+.heart{
+  position:fixed;
+  top:-20px;
+  width:14px;
+  height:14px;
+  background:red;
+  transform:rotate(45deg);
+  animation:fall 4s linear forwards;
+  z-index:999;
+  opacity:0.9;
+}
+.heart:before,.heart:after{
+  content:"";
+  position:absolute;
+  width:14px;
+  height:14px;
+  background:red;
+  border-radius:50%;
+}
+.heart:before{top:-7px;left:0;}
+.heart:after{left:7px;top:0;}
+@keyframes fall{
+  to{ transform:translateY(110vh) rotate(360deg); opacity:0; }
+}
+
+/* Scene */
+.scene{ position:relative; width:90vw; max-width:360px; margin-bottom:20px; z-index:10; }
+
+/* Envelope */
+.envelope{ position:relative; width:100%; height:200px; transform-style:preserve-3d; cursor:pointer; z-index:10; }
+.back{
+  position:absolute; inset:0; border-radius:20px; /* smoother corners */
+  background:linear-gradient(145deg,#fff0f5,#ffe5f0); /* milky white with pink mix */
+  box-shadow:0 30px 60px rgba(0,0,0,.3), inset 0 6px 15px rgba(255,255,255,.2);
+  z-index:1;
+}
+.pocket{
+  position:absolute; bottom:0; width:100%; height:55%;
+  background:linear-gradient(145deg,#ffd1e7,#ffb6c1);
+  clip-path:polygon(0 0,50% 65%,100% 0,100% 100%,0 100%);
+  z-index:3;
+}
+.flap{
+  position:absolute; inset:0;
+  background:linear-gradient(145deg,#ffdde1,#ffc0cb);
+  clip-path:polygon(0 0,50% 62%,100% 0);
+  transform-origin:top;
+  transition:transform 1s cubic-bezier(.65,.05,.36,1);
+  border-radius:20px; /* smoother flap corners */
+  z-index:5;
+  pointer-events:none; /* disable flap click, only use button */
+}
+
+/* Folded letter */
+.folded-letter{
+  position:absolute;
+  width:85%;
+  left:50%;
+  transform:translateX(-50%) translateY(0);
+  bottom:-20px;
+  max-height:40vh;
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+  opacity:0;
+  transition:all 1s cubic-bezier(.25,.8,.25,1);
+  cursor:pointer;
+  z-index:10;
+  overflow:hidden;
+}
+.folded-letter:before{
+  content:"";
+  position:absolute;
+  top:50%; left:0;
+  width:100%; height:2px;
+  background:#f0f0f0;
+}
+
+/* Letter content — TALLER READING WINDOW */
+.letter-content{
+  opacity:0;
+  padding:15px;
+  font-family:'Playfair Display',serif;
+  font-size:14px;
+  line-height:1.6;
+  color:#333;
+
+  height:330px;   /* visible reading area */
+  overflow-y:auto;
+  scroll-behavior:smooth;
+
+  mask-image: linear-gradient(to bottom,
+    transparent 0px,
+    black 25px,
+    black 305px,
+    transparent 330px
+  );
+  -webkit-mask-image: linear-gradient(to bottom,
+    transparent 0px,
+    black 25px,
+    black 305px,
+    transparent 330px
+  );
+}
+
+/* STATES */
+.open .flap{ transform:rotateX(-180deg); }
+.slide .folded-letter{
+  opacity:1;
+  transform:translateX(-50%) translateY(-120px);
+}
+
+.folded-letter.unfold{
+  bottom:auto;
+  top:110px;
+  max-height:calc(100vh - 140px);
+  border-radius:8px;
+}
+.folded-letter.unfold .letter-content{
+  opacity:1;
+}
+
+.hint{
+  font-size:12px;
+  width:100%;
+  text-align:center;
+  margin-top:10px;
+}
+
+/* OPEN BUTTON */
+#openBtn{
+  padding:10px 20px;
+  font-size:16px;
+  background:#ff6fa5;
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  margin-bottom:20px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+  position: relative;
+  z-index:20; /* above background */
+}
+#openBtn:hover{ background:#ff4f8b; }
+</style>
+</head>
+<body>
+
+<button id="openBtn">Open Envelope 💌</button>
+
+<div class="scene">
+  <div class="envelope" id="env">
+    <div class="back"></div>
+    <div class="pocket"></div>
+    <div class="flap"></div>
+
+    <div class="folded-letter" id="letter">
+      <div class="letter-content">
+        <h2>My Mae,</h2>
+        <p>Even with miles between us, you feel incredibly close to my heart. I carry you with me in my thoughts from the moment I wake up until the moment I fall asleep.</p>
+        <p>You appear in the smallest moments of my day. In random smiles. In quiet pauses. In thoughts that make everything feel warmer and lighter.</p>
+        <p>You have this calm, beautiful presence in my life that makes everything feel more peaceful. Just knowing you are there for me changes my whole day.</p>
+        <p>I miss you in ways that are hard to explain. Not loudly, but gently. The kind of missing that sits in the heart and refuses to leave.</p>
+        <p>I imagine sitting next to you, talking about nothing, laughing about simple things, and those thoughts alone make me happy.</p>
+        <p>You are not just someone I love. You are someone who makes my world feel softer, safer, and brighter without even trying.</p>
+        <p>Every day reminds me how lucky I am to have you in my life. And how much I look forward to the day distance is no longer between us.</p>
+        <p>I do not just miss you. I cherish you. I appreciate you. I adore you.</p>
+        <p style="text-align:center; margin-top:8px;"><strong>I LOVE YOU MAE 💋</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hint">Click the button to open the envelope, then click the letter 💌</div>
+
+<script>
+const letter = document.getElementById("letter");
+const env = document.getElementById("env");
+const openBtn = document.getElementById("openBtn");
+let step=0;
+
+function heartRain(){
+  for(let i=0;i<40;i++){
+    setTimeout(()=>{
+      const heart=document.createElement("div");
+      heart.className="heart";
+      heart.style.left=Math.random()*100+"vw";
+      heart.style.animationDuration=3+Math.random()*2+"s";
+      document.body.appendChild(heart);
+      setTimeout(()=>heart.remove(),5000);
+    },i*80);
+  }
+}
+
+// Step 1: Open envelope via button + heart rain + slide letter out
+openBtn.addEventListener("click", e=>{
+  e.stopPropagation();
+  if(step===0){
+    env.classList.add("open");
+    heartRain();
+    step=1;
+    setTimeout(()=>env.classList.add("slide"),300);
+  }
+});
+
+// Step 2: unfold letter downward
+letter.addEventListener("click", e=>{
+  e.stopPropagation();
+  if(step===1){
+    letter.classList.add("unfold");
+    step=2;
+  }
+});
+</script>
+
+</body>
+</html>
